@@ -6,8 +6,11 @@ AllCops:
     - "db/schema.rb"
     - "node_modules/**/*"
     - "vendor/**/*"
+    - "bin/**/*"
+    - "config/**/*"
     - "Gemfile.lock"
   NewCops: enable
+  SuggestExtensions: false
 
 Layout/LineLength:
   Max: 120
@@ -20,3 +23,6 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
+
+require:
+  - rubocop-rails
