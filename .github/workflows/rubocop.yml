@@ -6,12 +6,16 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.2
+
       - name: Install dependencies
         run: bundle install
+
       - name: Run Rubocop
         run: bundle exec rubocop
