@@ -1,0 +1,28 @@
+inherit_from: .rubocop_todo.yml
+
+# General configuration
+AllCops:
+  Exclude:
+    - "db/schema.rb"
+    - "node_modules/**/*"
+    - "vendor/**/*"
+    - "bin/**/*"
+    - "config/**/*"
+    - "Gemfile.lock"
+  NewCops: enable
+  SuggestExtensions: false
+
+Layout/LineLength:
+  Max: 120
+
+Layout/SpaceInsideBlockBraces:
+  EnforcedStyle: space
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+require:
+  - rubocop-rails
