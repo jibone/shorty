@@ -59,6 +59,12 @@ group :development, :test do
   # Robocop the things
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
+
+  # Rspec the tests
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
 end
 
 group :development do
@@ -75,10 +81,4 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
-
-  # Rspec the tests
-  gem 'factory_bot_rails'
-  gem 'faker'
-  gem 'rspec-rails'
-  gem 'shoulda-matchers'
 end
