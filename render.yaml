@@ -1,10 +1,16 @@
-database:
+databases:
   - name: shorty
     databaseName: shorty_production
     user: shorty
     plan: free
 
 services:
+  - type: redis
+    name: cache
+    ipAllowList: []
+    plan: free
+    maxmemoryPolicy: allkeys-lfu
+
   - type: web
     name: shorty
     runtime: ruby
@@ -20,3 +26,8 @@ services:
         sync: false
       - key: WEB_CUNCURRENCY
         value: 2
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: cache
+          property: connectionString
