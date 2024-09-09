@@ -1,0 +1,16 @@
+<%= render(HeaderComponent.new) %>
+
+<div class="flex mt-14 space-x-2">
+  <div class="w-1/2 space-y-2">
+    <div>
+      <h1 class="text-4xl font-extrabold">Shorten long URLs</h1>
+    </div>
+    <div>
+      <p class="text-lg">Use the form to quickly shorten a long URL.</p>
+    </div>
+  </div>
+
+  <div class="w-1/2">
+    <%= render(ShortLinkFormComponent.new(link: @link)) %>
+  </div>
+</div>
