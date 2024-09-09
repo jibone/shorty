@@ -5,6 +5,7 @@ RSpec.describe Link, type: :model do
     it { should validate_presence_of(:title) }
     it { should validate_presence_of(:target_url) }
     it { should validate_presence_of(:short_code) }
+    it { should validate_uniqueness_of(:short_code) }
 
     let(:link) { FactoryBot.build(:link) }
 

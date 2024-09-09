@@ -4,6 +4,7 @@ require 'uri'
 class Link < ApplicationRecord
   validates :title, presence: true
   validates :short_code, presence: true
+  validates :short_code, uniqueness: true
   validates :target_url, presence: true
   validate :valid_url_format
 

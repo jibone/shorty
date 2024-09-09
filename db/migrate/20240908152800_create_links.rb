@@ -6,7 +6,7 @@ class CreateLinks < ActiveRecord::Migration[7.1]
       t.string :title
       t.string :target_url
       t.string :short_code
-      t.index :short_code
+      t.index :short_code, unique: true
 
       t.timestamps
     end

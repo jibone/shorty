@@ -27,6 +27,8 @@ Style/TrailingCommaInHashLiteral:
 
 Metrics/BlockLength:
   Max: 100 # 100 lines blocks is probably too much...
+  Include:
+    - "app/controllers/**/*"
 
 require:
   - rubocop-rails

@@ -1,0 +1,47 @@
+<%= render(HeaderComponent.new) %>
+
+<div class="mt-16">
+  <div class="px-4 flex items-center sm:px-0">
+    <div class="flex-grow">
+      <h3 class="text-base font-semibold leading-7 text-gray-900">Short Link Information</h3>
+      <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Details and stats for short link.</p>
+    </div>
+    <div class="flex-none">
+      <%= link_to 'Create New', new_links_path, class: "bg-gray-900 text-gray-100 px-2 py-3 rounded-lg hover:bg-gray-700" %>
+    </div>
+  </div>
+  <div class="mt-6 border-t border-gray-100">
+    <dl class="divide-y divide-gray-100">
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Title</dt>
+        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.title %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Target URL (Original URL)</dt>
+        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.target_url %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Shorten URL</dt>
+        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+          <div class="flex border border-gray-200 p-1 rounded-lg items-center">
+            <div class="flex-grow">
+                <div class="font-medium py-3 pl-2">https://shorty.onrender.com/<%= @link.short_code %></div>
+            </div>
+            <div class="flex-none w-fit">
+              <a href="#" class="px-2 py-3 font-medium bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700">Copy</a>
+            </div>
+          </div>
+        </dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Updated</dt>
+        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.updated_at %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Created</dt>
+        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.created_at %></dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
