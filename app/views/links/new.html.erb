@@ -3,6 +3,13 @@
 <div class="flex mt-16 space-x-2">
   <div class="w-1/2">
     <h1 class="text-2xl font-extrabold mb-4">Create a new short URL</h1>
+
+    <% if flash[:error] %>
+      <div class="px-2 py-3 mb-4 bg-red-50 text-red-900 border border-red-200 rounded-lg">
+        <%= flash[:error] %>
+      </div>
+    <% end %>
+
     <%= render(ShortLinkFormComponent.new(link: @link)) %>
   </div>
   <div class="w-1/2">

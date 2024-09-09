@@ -3,13 +3,11 @@
 require "rails_helper"
 
 RSpec.describe ShortLinkFormComponent, type: :component do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:link) { FactoryBot.build(:link) }
 
-  # it "renders something useful" do
-  #   expect(
-  #     render_inline(described_class.new(attr: "value")) { "Hello, components!" }.css("p").to_html
-  #   ).to include(
-  #     "Hello, components!"
-  #   )
-  # end
+  it 'renders the create short link form' do
+    render_inline(described_class.new(link:))
+    expect(page).to have_text 'Title'
+    expect(page).to have_text 'URL'
+  end
 end

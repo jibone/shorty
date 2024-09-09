@@ -9,7 +9,7 @@ class LinksController < ApplicationController
   end
 
   def new
-    @link = Link.new
+    @link = Link.new(flash[:link_params])
   end
 
   def create
@@ -23,7 +23,7 @@ class LinksController < ApplicationController
       attempts += 1
       updated_link = ShortLinkCreator.new(@link, seed + attempts).call
 
-      success(updated_link) if updated_link.save
+      save(updated_link)
     rescue ActiveRecord::RecordNotUnique
       # If we hit a collision, we keep trying until we reach MAX_ATTEMPTS
       retry if attempts < MAX_ATTEMPTS
@@ -43,7 +43,19 @@ class LinksController < ApplicationController
   end
 
   def failure
-    flash.now[:error] = t('link.create.flash.error')
-    render :new
+    flash[:error] = t('link.create.flash.error')
+    flash[:link_params] = link_params
+    redirect_to new_links_path
+  end
+
+  def save(updated_link)
+    if updated_link.valid?
+      updated_link.save
+      success(updated_link)
+    else
+      flash[:error] = updated_link.errors.full_messages.to_sentence
+      flash[:link_params] = link_params
+      redirect_to new_links_path
+    end
   end
 end
