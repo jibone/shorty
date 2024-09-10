@@ -17,21 +17,21 @@
         <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.title %></dd>
       </div>
       <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium leading-6 text-gray-900">Target URL (Original URL)</dt>
-        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.target_url %></dd>
-      </div>
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
         <dt class="text-sm font-medium leading-6 text-gray-900">Shorten URL</dt>
         <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-          <div class="flex border border-gray-200 p-1 rounded-lg items-center">
+          <div class="flex border border-gray-200 p-1 rounded-lg items-center space-x-2">
             <div class="flex-grow">
-                <div class="font-medium py-3 pl-2">https://shorty.onrender.com/<%= @link.short_code %></div>
+              <input class="w-full rounded-lg text-lg border-0 active:border-0 active:outline-none focus:border-0 focus:outline-none font-medium py-3 pl-2" type="text" id="copy-text" value="http://<%= request.host %>/<%= @link.short_code %>" />
             </div>
             <div class="flex-none w-fit">
-              <a href="#" class="px-2 py-3 font-medium bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700">Copy</a>
+              <button class="px-2 py-3 font-medium bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700" id="copy-button" data-clipboard-target="#copy-text">Copy</button>
             </div>
           </div>
         </dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Target URL (Original URL)</dt>
+        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.target_url %></dd>
       </div>
       <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
         <dt class="text-sm font-medium leading-6 text-gray-900">Updated</dt>
@@ -44,4 +44,24 @@
     </dl>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var copyButton = document.getElementById('copy-button');
+
+    copyButton.addEventListener('click', function() {
+      var copyText = document.querySelector(copyButton.dataset.clipboardTarget);
+
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+
+      document.execCommand('copy');
+
+      copyButton.textContent = 'Copied';
+      setTimeout(function() {
+        copyButton.textContent = 'Copy';
+      }, 2000); // Reset after 2 seconds
+    });
+  });
+</script>
 
