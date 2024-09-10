@@ -2,10 +2,19 @@ require 'rails_helper'
 
 RSpec.describe LinksController, type: :controller do
   describe 'GET #show' do
-    it 'returns a successful response' do
-      link = Link.create(title: 'Jibone Blog', target_url: 'https://jshamsul.com', short_code: 'qwerty')
-      get :show, params: { short_code: link.short_code }
-      expect(response).to be_successful
+    context 'when short code is valid' do
+      it 'returns a successful response' do
+        link = Link.create(title: 'Jibone Blog', target_url: 'https://jshamsul.com', short_code: 'qwerty')
+        get :show, params: { short_code: link.short_code }
+        expect(response).to be_successful
+      end
+    end
+
+    context 'when short code is invalid' do
+      it 'renders a not found template' do
+        get :show, params: { short_code: 'invalid_short_code' }
+        expect(response).to render_template(:not_found)
+      end
     end
   end
 
@@ -48,6 +57,27 @@ RSpec.describe LinksController, type: :controller do
 
         expect(response).to redirect_to(new_links_path)
         expect(flash[:error]).to be_present
+      end
+    end
+  end
+
+  describe 'GET #redirect' do
+    context 'when a valid short code is provided' do
+      it 'redirects to the external URL' do
+        new_link = create(:link, title: 'jibone', target_url: 'https://jshamsul.com')
+
+        get :redirect, params: { short_code: new_link.short_code }
+
+        expect(response).to redirect_to(new_link.target_url)
+        expect(response.status).to eq(302)
+      end
+    end
+
+    context 'when an invalid short code is provided' do
+      it 'renders a not found template' do
+        get :redirect, params: { short_code: "invalid_short_code" }
+
+        expect(response).to render_template(:not_found)
       end
     end
   end

@@ -31,6 +31,16 @@ class LinksController < ApplicationController
     end
   end
 
+  def redirect
+    @link = Link.find_by(short_code: params[:short_code])
+
+    if @link.nil?
+      render :not_found
+    else
+      redirect_to @link.target_url, allow_other_host: true
+    end
+  end
+
   private
 
   def link_params
