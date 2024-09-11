@@ -2,11 +2,55 @@ require 'rails_helper'
 
 RSpec.describe LinksController, type: :controller do
   describe 'GET #show' do
+    let(:link) { create(:link) }
+
     context 'when short code is valid' do
-      it 'returns a successful response' do
-        link = Link.create(title: 'Jibone Blog', target_url: 'https://jshamsul.com', short_code: 'qwerty')
-        get :show, params: { short_code: link.short_code }
-        expect(response).to be_successful
+      context 'when the link has clicks' do
+        before do
+          create(:link_click, link:, country: 'Singapore', device_type: 'desktop', browser_name: 'Chrome',
+                              os_name: 'Windows')
+          create(:link_click, link:, country: 'Malaysia', device_type: 'desktop', browser_name: 'Chrome',
+                              os_name: 'MacOSX')
+          create(:link_click, link:, country: 'Singapore', device_type: 'mobile', browser_name: 'Safari',
+                              os_name: 'Windows')
+
+          get :show, params: { short_code: link.short_code }
+        end
+
+        it 'assigns the requested link' do
+          expect(assigns(:link)).to eq(link)
+        end
+
+        it 'assigns all the analytics stats' do
+          expect(assigns(:total_clicks)).to eq(3)
+          expect(assigns(:analytics)[:clicks_by_country]).to eq({ 'Singapore' => 2, 'Malaysia' => 1 })
+          expect(assigns(:analytics)[:clicks_by_device]).to eq({ 'desktop' => 2, 'mobile' => 1 })
+          expect(assigns(:analytics)[:clicks_by_browser]).to eq({ 'Chrome' => 2, 'Safari' => 1 })
+          expect(assigns(:analytics)[:clicks_by_os]).to eq({ 'Windows' => 2, 'MacOSX' => 1 })
+        end
+
+        it 'renders the show template' do
+          expect(response).to be_successful
+          expect(response).to render_template(:show)
+        end
+      end
+
+      context 'when the link has no clicks' do
+        before do
+          get :show, params: { short_code: link.short_code }
+        end
+
+        it 'assigns the requested link' do
+          expect(assigns(:link)).to eq(link)
+        end
+
+        it 'assings 0 and empty for all the analytic stats' do
+          expect(assigns(:total_clicks)).to eq(0)
+          expect(assigns(:analytics)[:clicks_by_country]).to be_empty
+          expect(assigns(:analytics)[:clicks_by_device]).to be_empty
+          expect(assigns(:analytics)[:clicks_by_browser]).to be_empty
+          expect(assigns(:analytics)[:clicks_by_os]).to be_empty
+        end
       end
     end
 

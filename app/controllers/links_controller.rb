@@ -5,7 +5,15 @@ class LinksController < ApplicationController
   def show
     @link = Link.find_by(short_code: params[:short_code])
 
-    render :not_found if @link.nil?
+    if @link.nil?
+      render :not_found
+      return
+    end
+
+    @clicks = @link.link_clicks
+    @total_clicks = @clicks.count
+
+    @analytics = grouped_click_analytics(@clicks)
   end
 
   def new
@@ -34,10 +42,11 @@ class LinksController < ApplicationController
   def redirect
     @link = Link.find_by(short_code: params[:short_code])
 
-    if @link.nil?
-      render :not_found
-    else
+    if @link
+      ClickEventWriter.new(@link, request).call
       redirect_to @link.target_url, allow_other_host: true
+    else
+      render :not_found
     end
   end
 
@@ -45,6 +54,18 @@ class LinksController < ApplicationController
 
   def link_params
     params.require(:link).permit(:title, :target_url)
+  end
+
+  # TODO: move this to new analytics service object.
+  # Logic should not be in controller or model
+  def grouped_click_analytics(clicks)
+    {
+      clicks_by_country: clicks.group(:country).count,
+      clicks_by_device: clicks.group(:device_type).count,
+      clicks_by_browser: clicks.group(:browser_name).count,
+      clicks_by_os: clicks.group(:os_name).count,
+      clicks_by_referer: clicks.group(:referer).count,
+    }
   end
 
   def success(updated_link)

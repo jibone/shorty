@@ -2,6 +2,8 @@ require 'uri'
 
 # class Link
 class Link < ApplicationRecord
+  has_many :link_clicks, dependent: :destroy
+
   validates :title, presence: true
   validates :short_code, presence: true
   validates :short_code, uniqueness: true
