@@ -21,7 +21,7 @@
         <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
           <div class="flex border border-gray-200 p-1 rounded-lg items-center space-x-2">
             <div class="flex-grow">
-              <input class="w-full rounded-lg text-lg border-0 active:border-0 active:outline-none focus:border-0 focus:outline-none font-medium py-3 pl-2" type="text" id="copy-text" value="http://<%= request.host %>/<%= @link.short_code %>" />
+              <input class="w-full rounded-lg text-lg border-0 active:border-0 active:outline-none focus:border-0 focus:outline-none font-medium py-3 pl-2" type="text" id="copy-text" value="https://<%= request.host %>/<%= @link.short_code %>" />
             </div>
             <div class="flex-none w-fit">
               <button class="px-2 py-3 font-medium bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700" id="copy-button" data-clipboard-target="#copy-text">Copy</button>
@@ -42,6 +42,65 @@
         <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.created_at %></dd>
       </div>
     </dl>
+  </div>
+</div>
+
+<div class="mt-16">
+  <h2 class="text-xl font-medium">Analytics</h2>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+    <div class="border border-gray-300 p-4 rounded-lg">
+      <h3 class="text-lg font-medium">Total Clicks:</h3>
+      <div class="text-2xl"><%= @total_clicks %></div>
+    </div>
+
+    <div class="border border-gray-300 p-4 rounded-lg">
+      <h3 class="text-lg font-medium">Clicks by Country</h3>
+      <div class="flex flex-col">
+        <% @analytics[:clicks_by_country].each do |country, count| %>
+          <div class="flex">
+            <div class="w-10 text-right pr-2 font-medium"><%= count %></div>
+            <div class="w-full"><%= country || 'Unknown' %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="border border-gray-300 p-4 rounded-lg">
+      <h3 class="text-lg font-medium">Clicks by Browser</h3>
+      <div class="flex flex-col">
+        <% @analytics[:clicks_by_browser].each do |browser, count| %>
+          <div class="flex">
+            <div class="w-10 text-right pr-2 font-medium"><%= count %></div>
+            <div class="w-full"><%= browser || 'Unknown' %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="border border-gray-300 p-4 rounded-lg">
+      <h3 class="text-lg font-medium">Clicks by Operating System</h3>
+      <div class="flex flex-col">
+        <% @analytics[:clicks_by_os].each do |os, count| %>
+          <div class="flex">
+            <div class="w-10 text-right pr-2 font-medium"><%= count %></div>
+            <div class="w-full"><%= os || 'Unknown' %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="border border-gray-300 p-4 rounded-lg">
+      <h3 class="text-lg font-medium">Clicks by Referer</h3>
+      <div class="flex flex-col">
+        <% @analytics[:clicks_by_referer].each do |referer, count| %>
+          <div class="flex">
+            <div class="w-10 text-right pr-2 font-medium"><%= count %></div>
+            <div class="w-full"><%= referer || 'Unknown' %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 

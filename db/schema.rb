@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_09_062725) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_10_131807) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "link_clicks", force: :cascade do |t|
+    t.bigint "link_id", null: false
+    t.string "ip_address"
+    t.string "country"
+    t.string "region"
+    t.string "city"
+    t.string "device_type"
+    t.string "browser_name"
+    t.string "browser_version"
+    t.string "os_name"
+    t.string "os_version"
+    t.string "referer"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["link_id"], name: "index_link_clicks_on_link_id"
+  end
 
   create_table "links", force: :cascade do |t|
     t.string "title"
@@ -24,4 +41,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_09_062725) do
     t.index ["short_code"], name: "index_unique_on_short_sode", unique: true
   end
 
+  add_foreign_key "link_clicks", "links"
 end
