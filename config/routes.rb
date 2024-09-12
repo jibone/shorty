@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   resource :links, only: [:new, :create]
   get '/links/:short_code', to: 'links#show', as: :short_code_links
 
+  get '/qr', to: 'qrcodes#download', as: :download_qr_codes
+
   # this redirect
   get ':short_code', to: 'links#redirect', as: :redirect_short_code_links
 end

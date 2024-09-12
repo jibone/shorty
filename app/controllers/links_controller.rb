@@ -10,6 +10,9 @@ class LinksController < ApplicationController
       return
     end
 
+    @short_url_full = generate_full_short_url(request, @link)
+    @qr_code = QrcodeGenerator.new(@short_url_full).call
+
     @clicks = @link.link_clicks
     @total_clicks = @clicks.count
 
@@ -54,6 +57,13 @@ class LinksController < ApplicationController
 
   def link_params
     params.require(:link).permit(:title, :target_url)
+  end
+
+  def generate_full_short_url(request, link)
+    port = ''
+    port = ":#{request.port}" if request.port != 443 || request != 80
+
+    "#{request.protocol}#{request.host}#{port}/#{link.short_code}"
   end
 
   # TODO: move this to new analytics service object.
