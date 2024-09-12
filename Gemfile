@@ -46,6 +46,10 @@ gem 'geocoder'
 # parse user-agent to get some details
 gem 'browser'
 
+# Generating QR code
+gem 'chunky_png'
+gem 'rqrcode'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

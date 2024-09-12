@@ -1,54 +1,65 @@
 <%= render(HeaderComponent.new) %>
 
 <div class="mt-16">
-  <div class="px-4 flex items-center sm:px-0">
+  <div class="px-4 flex items-center mb-10 sm:px-0">
     <div class="flex-grow">
       <h3 class="text-base font-semibold leading-7 text-gray-900">Short Link Information</h3>
-      <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Details and stats for short link.</p>
+      <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Copy the short link, or download the QR code to share.</p>
     </div>
     <div class="flex-none">
       <%= link_to 'Create New', new_links_path, class: "bg-gray-900 text-gray-100 px-2 py-3 rounded-lg hover:bg-gray-700" %>
     </div>
   </div>
-  <div class="mt-6 border-t border-gray-100">
-    <dl class="divide-y divide-gray-100">
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium leading-6 text-gray-900">Title</dt>
-        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.title %></dd>
+
+  <div class="flex flex-col md:flex-row space-x-4">
+    <div class="md:w-1/3">
+      <div class="flex border border-gray-200 p-1 rounded-lg items-center space-x-2">
+        <div class="flex-grow">
+          <input class="w-full rounded-lg text-lg border-0 active:border-0 active:outline-none focus:border-0 focus:outline-none font-medium py-3 pl-2" type="text" id="copy-text" value="<%= @short_url_full %>" />
+        </div>
+        <div class="flex-none w-fit">
+          <button class="px-2 py-3 font-medium bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700" id="copy-button" data-clipboard-target="#copy-text">Copy</button>
+        </div>
       </div>
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium leading-6 text-gray-900">Shorten URL</dt>
-        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-          <div class="flex border border-gray-200 p-1 rounded-lg items-center space-x-2">
-            <div class="flex-grow">
-              <input class="w-full rounded-lg text-lg border-0 active:border-0 active:outline-none focus:border-0 focus:outline-none font-medium py-3 pl-2" type="text" id="copy-text" value="https://<%= request.host %>/<%= @link.short_code %>" />
-            </div>
-            <div class="flex-none w-fit">
-              <button class="px-2 py-3 font-medium bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700" id="copy-button" data-clipboard-target="#copy-text">Copy</button>
-            </div>
-          </div>
-        </dd>
+
+      <div class="mt-6 w-full">
+        <div class="w-fit mx-auto">
+          <%= raw @qr_code.as_svg(module_size: 10) %>
+        </div>
+        <div class="mt-4 w-fit mx-auto flex space-x-4">
+          <%= link_to 'Download as PNG', download_qr_codes_path(link: @short_url_full, format: 'png'), class: "px-3 py-2 text-sm bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700" %>
+          <%= link_to 'Download as SVG', download_qr_codes_path(link: @short_url_full, format: 'svg'), class: "px-3 py-2 text-sm bg-gray-900 text-gray-100 rounded-lg hover:bg-gray-700" %>
+        </div>
       </div>
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium leading-6 text-gray-900">Target URL (Original URL)</dt>
-        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.target_url %></dd>
-      </div>
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium leading-6 text-gray-900">Updated</dt>
-        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.updated_at %></dd>
-      </div>
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium leading-6 text-gray-900">Created</dt>
-        <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.created_at %></dd>
-      </div>
-    </dl>
+    </div>
+
+    <div class="w-2/3 border-t border-gray-100">
+      <dl class="divide-y divide-gray-100">
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Title</dt>
+          <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.title %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Target URL (Original URL)</dt>
+          <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.target_url %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Updated</dt>
+          <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.updated_at %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Created</dt>
+          <dd class="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @link.created_at %></dd>
+        </div>
+      </dl>
+    </div>
   </div>
 </div>
 
 <div class="mt-16">
   <h2 class="text-xl font-medium">Analytics</h2>
 
-  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
     <div class="border border-gray-300 p-4 rounded-lg">
       <h3 class="text-lg font-medium">Total Clicks:</h3>
       <div class="text-2xl"><%= @total_clicks %></div>
