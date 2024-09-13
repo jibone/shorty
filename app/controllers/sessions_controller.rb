@@ -45,7 +45,6 @@ class SessionsController < ApplicationController
   end
 
   def logout_user
-    puts 'logout the user'
     session.delete(:user_id)
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
