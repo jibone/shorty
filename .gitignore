@@ -38,4 +38,4 @@
 !/app/assets/builds/.keep
 
 # ignore the generated rspec example file
-/spec/example.txt
+/spec/examples.txt

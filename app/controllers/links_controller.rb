@@ -11,7 +11,7 @@ class LinksController < ApplicationController
     end
 
     @current_user = current_user
-    @short_url_full = generate_full_short_url(request, @link)
+    @short_url_full = @link.full_short_url(request)
     @qr_code = QrcodeGenerator.new(@short_url_full).call
 
     @clicks = @link.link_clicks
@@ -84,18 +84,11 @@ class LinksController < ApplicationController
   def delete_link(link, user)
     if link.user == user
       link.destroy
-      flash[:notice] = "Link deleted successfully"
+      flash[:notice] = t('link.delete.success')
     else
-      flash[:alert] = "You are not authorized to delete this link."
+      flash[:alert] = t('link.delete.not_authorized')
     end
     redirect_to users_dashboard_path
-  end
-
-  def generate_full_short_url(request, link)
-    port = ''
-    port = ":#{request.port}" if request.port != 443 || request != 80
-
-    "#{request.protocol}#{request.host}#{port}/#{link.short_code}"
   end
 
   # TODO: move this to new analytics service object.

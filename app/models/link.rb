@@ -11,6 +11,13 @@ class Link < ApplicationRecord
   validates :target_url, presence: true
   validate :valid_url_format
 
+  def full_short_url(request)
+    port = ''
+    port = ":#{request.port}" if request.port != 443 && request != 80
+
+    "#{request.protocol}#{request.host}#{port}/#{short_code}"
+  end
+
   private
 
   def valid_url_format

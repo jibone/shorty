@@ -10,3 +10,6 @@ en:
       flash:
         success: "Short URL created successfully!"
         error: "There was a problem generating a unique short URl. Please try again later."
+    delete:
+      success: "Link deleted successfully"
+      not_authorized: "You are not authorized to delete this link."
