@@ -29,7 +29,7 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
       remember(user) if params[:remember_me] == '1'
-      redirect_to users_dashboard_path(user)
+      redirect_to users_dashboard_path
     else
       flash.now[:error] = t('session.error.invalid_login')
       render 'new'
