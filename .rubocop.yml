@@ -25,6 +25,9 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
 
+Lint/RedundantCopDisableDirective:
+  Enabled: false
+
 Metrics/BlockLength:
   Max: 150 # 100 lines blocks is probably too much...
   Include:
