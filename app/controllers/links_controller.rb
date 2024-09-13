@@ -6,7 +6,7 @@ class LinksController < ApplicationController
   MAX_ATTEMPTS = 5 # retry 5 time when there is a collision when generating short code.
 
   def show
-    @link = Link.find_by(short_code: params[:short_code])
+    @link = ShortCodeCacheRead.new(params[:short_code]).call
 
     if @link.nil?
       render :not_found
@@ -60,7 +60,7 @@ class LinksController < ApplicationController
   end
 
   def redirect
-    @link = Link.find_by(short_code: params[:short_code])
+    @link = ShortCodeCacheRead.new(params[:short_code]).call
 
     if @link
       ClickEventWriter.new(@link, request).call
@@ -86,6 +86,7 @@ class LinksController < ApplicationController
 
   def delete_link(link, user)
     if link.user == user
+      ShortCodeCacheDelete.new(link.short_code).call
       link.destroy
       flash[:notice] = t('link.delete.success')
     else
@@ -120,6 +121,7 @@ class LinksController < ApplicationController
   def save(updated_link)
     if updated_link.valid?
       updated_link.save
+      ShortCodeCacheWriter.new(updated_link.short_code, updated_link).call
       success(updated_link)
     else
       flash[:error] = updated_link.errors.full_messages.to_sentence
