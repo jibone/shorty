@@ -1,4 +1,6 @@
-# app/controllers/qr_codes_controller.rb
+# QrcodesController
+#
+# Handles user requesting to download either png or svg QR code.
 class QrcodesController < ApplicationController
   def download
     if params[:link].blank?

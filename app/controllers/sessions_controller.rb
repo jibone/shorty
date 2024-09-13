@@ -1,4 +1,6 @@
-# Session controller for user login and logout
+# SessionController
+#
+# Handels User sessions, login and logout.
 class SessionsController < ApplicationController
   def new
     return unless logged_in?

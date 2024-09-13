@@ -1,4 +1,6 @@
-# Users Controller
+# UsersController
+#
+# Handles User creation (signup) and user's dashboard.
 class UsersController < ApplicationController
   before_action :require_user, only: [:dashboard]
 

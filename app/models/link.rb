@@ -1,6 +1,10 @@
 require 'uri'
 
-# class Link
+# Link model
+#
+# Stores the target_link, the generated short code.
+# - Validates the link format for the targeted links.
+# - Generate the full short url with the request host.
 class Link < ApplicationRecord
   belongs_to :user, optional: true
   has_many :link_clicks, dependent: :destroy

@@ -1,4 +1,6 @@
-# Users: username, password
+# User
+#
+# Stores user informatin
 class User < ApplicationRecord
   has_secure_password
   has_many :links, dependent: :destroy

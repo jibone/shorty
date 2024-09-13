@@ -1,4 +1,7 @@
-# Links controller.
+# LinksController
+#
+# Handles link creations, deletions, and details.
+# The 'redirect' method will redirects to link's target_url.
 class LinksController < ApplicationController
   MAX_ATTEMPTS = 5 # retry 5 time when there is a collision when generating short code.
 
