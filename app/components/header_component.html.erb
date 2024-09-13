@@ -7,8 +7,13 @@
     </div>
     <div class="flex-grow"><%= content %></div>
     <div class="flex flex-1 justify-end space-x-4">
-      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Sign Up</a>
-      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Sign in <span aria-hidden="true">&rarr;</span></a>
+      <% if @current_user.blank?  %>
+        <%= link_to "sign up", new_users_path, class: "font-semibold leading-6 text-gray-900" %> 
+        <%= link_to "sign in", user_login_path, class: "font-semibold leading-6 text-gray-900" %> 
+      <% else %>
+        <%= link_to "#{@current_user.username}", users_dashboard_path, class: "font-semibold leading-6 text-gray-900" %>
+        <%= link_to "logout", user_logout_path, data: { turbo: false }, class: "font-semibold leading-6 text-gray-900" %>
+      <% end %>
     </div>
   </nav>
 </header>

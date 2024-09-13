@@ -1,4 +1,7 @@
-# Links controller.
+# LinksController
+#
+# Handles link creations, deletions, and details.
+# The 'redirect' method will redirects to link's target_url.
 class LinksController < ApplicationController
   MAX_ATTEMPTS = 5 # retry 5 time when there is a collision when generating short code.
 
@@ -10,7 +13,8 @@ class LinksController < ApplicationController
       return
     end
 
-    @short_url_full = generate_full_short_url(request, @link)
+    @current_user = current_user
+    @short_url_full = @link.full_short_url(request)
     @qr_code = QrcodeGenerator.new(@short_url_full).call
 
     @clicks = @link.link_clicks
@@ -20,11 +24,12 @@ class LinksController < ApplicationController
   end
 
   def new
+    @current_user = current_user
     @link = Link.new(flash[:link_params])
   end
 
   def create
-    @link = Link.new(link_params)
+    @link = build_link(link_params)
 
     # Use timestamp for seed, might want to revisit this later
     seed = Time.current.to_i
@@ -40,6 +45,18 @@ class LinksController < ApplicationController
       retry if attempts < MAX_ATTEMPTS
       failure
     end
+  end
+
+  def destroy
+    @link = Link.find_by(short_code: params[:short_code])
+
+    if @link.nil?
+      render :not_found
+      return
+    end
+
+    @user = current_user
+    delete_link(@link, @user)
   end
 
   def redirect
@@ -59,11 +76,22 @@ class LinksController < ApplicationController
     params.require(:link).permit(:title, :target_url)
   end
 
-  def generate_full_short_url(request, link)
-    port = ''
-    port = ":#{request.port}" if request.port != 443 || request != 80
+  def build_link(link_params)
+    if logged_in?
+      current_user.links.build(link_params)
+    else
+      Link.new(link_params)
+    end
+  end
 
-    "#{request.protocol}#{request.host}#{port}/#{link.short_code}"
+  def delete_link(link, user)
+    if link.user == user
+      link.destroy
+      flash[:notice] = t('link.delete.success')
+    else
+      flash[:alert] = t('link.delete.not_authorized')
+    end
+    redirect_to users_dashboard_path
   end
 
   # TODO: move this to new analytics service object.

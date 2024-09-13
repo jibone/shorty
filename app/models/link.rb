@@ -1,7 +1,12 @@
 require 'uri'
 
-# class Link
+# Link model
+#
+# Stores the target_link, the generated short code.
+# - Validates the link format for the targeted links.
+# - Generate the full short url with the request host.
 class Link < ApplicationRecord
+  belongs_to :user, optional: true
   has_many :link_clicks, dependent: :destroy
 
   validates :title, presence: true
@@ -9,6 +14,13 @@ class Link < ApplicationRecord
   validates :short_code, uniqueness: true
   validates :target_url, presence: true
   validate :valid_url_format
+
+  def full_short_url(request)
+    port = ''
+    port = ":#{request.port}" if request.port != 443 && request != 80
+
+    "#{request.protocol}#{request.host}#{port}/#{short_code}"
+  end
 
   private
 
