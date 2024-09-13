@@ -2,6 +2,7 @@ require 'uri'
 
 # class Link
 class Link < ApplicationRecord
+  belongs_to :user, optional: true
   has_many :link_clicks, dependent: :destroy
 
   validates :title, presence: true

@@ -1,5 +1,10 @@
 # the Link class
 FactoryBot.define do
+  factory :user do
+    username { "Jibone" }
+    password_digest { "password" }
+  end
+
   factory :link_click do
     association :link
     ip_address { '127.0.0.1' }

@@ -1,5 +1,7 @@
 en:
-  hello: "Hello world"
+  session:
+    error:
+      invalid_login: "Invalid username or password"
   link:
     show:
       flash:

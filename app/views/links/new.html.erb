@@ -1,4 +1,4 @@
-<%= render(HeaderComponent.new) %>
+<%= render(HeaderComponent.new(@current_user)) %>
 
 <div class="flex mt-16 space-x-2">
   <div class="w-1/2">
@@ -13,6 +13,5 @@
     <%= render(ShortLinkFormComponent.new(link: @link)) %>
   </div>
   <div class="w-1/2">
-    <p>TODO update the copy here</p>
   </div>
 </div>

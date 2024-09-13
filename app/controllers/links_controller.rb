@@ -10,6 +10,7 @@ class LinksController < ApplicationController
       return
     end
 
+    @current_user = current_user
     @short_url_full = generate_full_short_url(request, @link)
     @qr_code = QrcodeGenerator.new(@short_url_full).call
 
@@ -20,11 +21,12 @@ class LinksController < ApplicationController
   end
 
   def new
+    @current_user = current_user
     @link = Link.new(flash[:link_params])
   end
 
   def create
-    @link = Link.new(link_params)
+    @link = build_link(link_params)
 
     # Use timestamp for seed, might want to revisit this later
     seed = Time.current.to_i
@@ -42,6 +44,18 @@ class LinksController < ApplicationController
     end
   end
 
+  def destroy
+    @link = Link.find_by(short_code: params[:short_code])
+
+    if @link.nil?
+      render :not_found
+      return
+    end
+
+    @user = current_user
+    delete_link(@link, @user)
+  end
+
   def redirect
     @link = Link.find_by(short_code: params[:short_code])
 
@@ -57,6 +71,24 @@ class LinksController < ApplicationController
 
   def link_params
     params.require(:link).permit(:title, :target_url)
+  end
+
+  def build_link(link_params)
+    if logged_in?
+      current_user.links.build(link_params)
+    else
+      Link.new(link_params)
+    end
+  end
+
+  def delete_link(link, user)
+    if link.user == user
+      link.destroy
+      flash[:notice] = "Link deleted successfully"
+    else
+      flash[:alert] = "You are not authorized to delete this link."
+    end
+    redirect_to users_dashboard_path
   end
 
   def generate_full_short_url(request, link)
