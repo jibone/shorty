@@ -31,18 +31,14 @@ class LinksController < ApplicationController
   def create
     @link = build_link(link_params)
 
-    # Use timestamp for seed, might want to revisit this later
-    seed = Time.current.to_i
-
-    attempts = 0
     begin
-      attempts += 1
-      updated_link = ShortLinkCreator.new(@link, seed + attempts).call
-
-      save(updated_link)
+      if ShortLinkCreator.new(@link).call
+        ShortCodeCacheWriter.new(@link.short_code, @link).call
+        success(@link)
+      else
+        invalid(@link)
+      end
     rescue ActiveRecord::RecordNotUnique
-      # If we hit a collision, we keep trying until we reach MAX_ATTEMPTS
-      retry if attempts < MAX_ATTEMPTS
       failure
     end
   end
@@ -112,21 +108,15 @@ class LinksController < ApplicationController
     redirect_to short_code_links_path(updated_link.short_code)
   end
 
-  def failure
-    flash[:error] = t('link.create.flash.error')
+  def invalid(updated_link)
+    flash[:error] = updated_link.errors.full_messages.to_sentence
     flash[:link_params] = link_params
     redirect_to new_links_path
   end
 
-  def save(updated_link)
-    if updated_link.valid?
-      updated_link.save
-      ShortCodeCacheWriter.new(updated_link.short_code, updated_link).call
-      success(updated_link)
-    else
-      flash[:error] = updated_link.errors.full_messages.to_sentence
-      flash[:link_params] = link_params
-      redirect_to new_links_path
-    end
+  def failure
+    flash[:error] = t('link.create.flash.error')
+    flash[:link_params] = link_params
+    redirect_to new_links_path
   end
 end

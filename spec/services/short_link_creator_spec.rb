@@ -1,26 +1,32 @@
 require 'rails_helper'
 
-RSpec.describe ShortLinkCreator do
+RSpec.describe ShortLinkCreator, type: :service do
+  let(:target_url) { 'https://example.com' }
+  let(:link) { Link.new(target_url:) }
+  let(:service) { ShortLinkCreator.new(link) }
+
   describe '#call' do
-    let(:link) { Link.new(title: 'Jibone blog', target_url: 'https://jshamsul.com') }
-    let(:seed) { 'random-seed-x' }
-
-    it 'generates a short code' do
-      service = ShortLinkCreator.new(link, seed)
-      result = service.call
-
-      expect(result.short_code).to be_present
-      expect(result.short_code.length).to eq(6)
+    context 'when short code is generated without collisions' do
+      it 'generates and saves a short code for the link' do
+        allow(link).to receive(:save).and_return(true) # Ensure save is successful
+        result = service.call
+        expect(result).to be true
+        expect(link.short_code).to be_a(String)
+        expect(link.short_code.length).to eq(6)
+        expect(link.short_code).not_to be_empty
+        expect(link).to have_received(:save) # Verify that the link was saved
+      end
     end
 
-    it 'generate a unique short code based on the target_url and seed' do
-      service1 = ShortLinkCreator.new(link, 'seed01')
-      service2 = ShortLinkCreator.new(link, 'seed02')
+    context 'when the maximum number of retries is exceeded' do
+      before do
+        allow(link).to receive(:save).and_raise(ActiveRecord::RecordNotUnique)
+        allow(service).to receive(:generate_short_code).and_return('123456')
+      end
 
-      short_code1 = service1.call.short_code
-      short_code2 = service2.call.short_code
-
-      expect(short_code1).to_not eq(short_code2)
+      it 'raises an ActiveRecord::RecordNotUnique exception after max retries' do
+        expect { service.call }.to raise_error(ActiveRecord::RecordNotUnique)
+      end
     end
   end
 end
