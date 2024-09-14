@@ -1,7 +1,7 @@
 require 'digest'
 
 # Short Link Creator service
-class ShortLinkCreator
+class ShortCodeGenerator
   attr_reader :link, :seed
 
   def initialize(link, seed)

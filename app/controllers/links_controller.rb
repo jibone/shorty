@@ -37,7 +37,7 @@ class LinksController < ApplicationController
     attempts = 0
     begin
       attempts += 1
-      updated_link = ShortLinkCreator.new(@link, seed + attempts).call
+      updated_link = ShortCodeGenerator.new(@link, seed + attempts).call
 
       save(updated_link)
     rescue ActiveRecord::RecordNotUnique
