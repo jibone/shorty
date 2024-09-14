@@ -32,8 +32,12 @@ class LinksController < ApplicationController
     @link = build_link(link_params)
 
     begin
-      updated_link = ShortLinkCreator.new(@link).call
-      save(updated_link)
+      if ShortLinkCreator.new(@link).call
+        ShortCodeCacheWriter.new(@link.short_code, @link).call
+        success(@link)
+      else
+        invalid(@link)
+      end
     rescue ActiveRecord::RecordNotUnique
       failure
     end
@@ -104,21 +108,15 @@ class LinksController < ApplicationController
     redirect_to short_code_links_path(updated_link.short_code)
   end
 
-  def failure
-    flash[:error] = t('link.create.flash.error')
+  def invalid(updated_link)
+    flash[:error] = updated_link.errors.full_messages.to_sentence
     flash[:link_params] = link_params
     redirect_to new_links_path
   end
 
-  def save(updated_link)
-    if updated_link.valid?
-      updated_link.save
-      ShortCodeCacheWriter.new(updated_link.short_code, updated_link).call
-      success(updated_link)
-    else
-      flash[:error] = updated_link.errors.full_messages.to_sentence
-      flash[:link_params] = link_params
-      redirect_to new_links_path
-    end
+  def failure
+    flash[:error] = t('link.create.flash.error')
+    flash[:link_params] = link_params
+    redirect_to new_links_path
   end
 end

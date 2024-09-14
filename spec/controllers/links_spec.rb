@@ -95,7 +95,7 @@ RSpec.describe LinksController, type: :controller do
       it 'handles the collision and retries generation a new short URL' do
         create(:link, target_url: 'https://jshamsul.com')
 
-        allow_any_instance_of(Link).to receive(:save).and_raise(ActiveRecord::RecordNotUnique)
+        allow_any_instance_of(ShortLinkCreator).to receive(:call).and_raise(ActiveRecord::RecordNotUnique)
 
         post :create, params: valid_link_params
 
