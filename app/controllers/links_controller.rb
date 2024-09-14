@@ -31,18 +31,10 @@ class LinksController < ApplicationController
   def create
     @link = build_link(link_params)
 
-    # Use timestamp for seed, might want to revisit this later
-    seed = Time.current.to_i
-
-    attempts = 0
     begin
-      attempts += 1
-      updated_link = ShortCodeGenerator.new(@link, seed + attempts).call
-
+      updated_link = ShortLinkCreator.new(@link).call
       save(updated_link)
     rescue ActiveRecord::RecordNotUnique
-      # If we hit a collision, we keep trying until we reach MAX_ATTEMPTS
-      retry if attempts < MAX_ATTEMPTS
       failure
     end
   end
