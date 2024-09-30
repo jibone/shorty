@@ -21,6 +21,7 @@ FactoryBot.define do
 
   factory :link do
     label { "Jibone's blog" }
+    title { "jshamsul.com" }
     target_url { "https://jshamsul.com" }
     short_code { "qwerty" }
   end

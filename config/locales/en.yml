@@ -9,6 +9,7 @@ en:
     create:
       flash:
         success: "Short URL created successfully!"
+        invalid: "URL entered is invalid."
         error: "There was a problem generating a unique short URl. Please try again later."
     delete:
       success: "Link deleted successfully"

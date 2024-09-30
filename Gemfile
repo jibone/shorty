@@ -50,6 +50,9 @@ gem 'browser'
 gem 'chunky_png'
 gem 'rqrcode'
 
+# To fetch links
+gem 'httparty'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

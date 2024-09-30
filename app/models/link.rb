@@ -10,6 +10,7 @@ class Link < ApplicationRecord
   has_many :link_clicks, dependent: :destroy
 
   validates :label, presence: true
+  # validates :title, presence: true
   validates :short_code, presence: true
   validates :short_code, uniqueness: true
   validates :target_url, presence: true

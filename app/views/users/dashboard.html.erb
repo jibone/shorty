@@ -17,6 +17,7 @@
           <thead>
             <tr>
               <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Label</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Title</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Short Url</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Target Url</th>
               <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Total Clicks</th>
@@ -31,6 +32,7 @@
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                   <%= link_to link.label, short_code_links_path(link.short_code), class: "text-indigo-600"  %>
                 </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.title %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.full_short_url(request) %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.target_url %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.link_clicks.count %></td>
