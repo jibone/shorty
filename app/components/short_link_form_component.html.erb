@@ -2,8 +2,8 @@
   <%= form_with model: @link, url: links_path, local: true do |form| %>
     <div class="flex flex-col space-y-6">
       <div class="flex flex-col space-y-2 w-3/6">
-        <%= form.label :title, "Title:" %>
-        <%= form.text_field :title, class: "rounded-lg", placeholder: "My website" %>
+        <%= form.label :label, "Label:" %>
+        <%= form.text_field :label, class: "rounded-lg", placeholder: "My website" %>
       </div>
       <div class="flex flex-col space-y-2 w-5/6">
         <%= form.label :target_url, "URL:" %>

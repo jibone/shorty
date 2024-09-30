@@ -9,7 +9,7 @@ class Link < ApplicationRecord
   belongs_to :user, optional: true
   has_many :link_clicks, dependent: :destroy
 
-  validates :title, presence: true
+  validates :label, presence: true
   validates :short_code, presence: true
   validates :short_code, uniqueness: true
   validates :target_url, presence: true

@@ -20,7 +20,7 @@ FactoryBot.define do
   end
 
   factory :link do
-    title { "Jibone's blog" }
+    label { "Jibone's blog" }
     target_url { "https://jshamsul.com" }
     short_code { "qwerty" }
   end
