@@ -1,3 +1,5 @@
+require 'uri'
+
 # LinksController
 #
 # Handles link creations, deletions, and details.
@@ -24,18 +26,13 @@ class LinksController < ApplicationController
   end
 
   def create
-    @link = build_link(link_params)
+    p = link_params
+    failure(t('link.create.flash.invalid')) and return unless url_valid?(p[:target_url])
 
-    begin
-      if ShortLinkCreator.new(@link).call
-        ShortCodeCacheWriter.new(@link.short_code, @link).call
-        success(@link)
-      else
-        invalid(@link)
-      end
-    rescue ActiveRecord::RecordNotUnique
-      failure
-    end
+    title = LinkTitleFetcher.new(p[:target_url]).call
+    @link = build_link({ label: p[:label], target_url: p[:target_url], title: })
+
+    save_link(@link)
   end
 
   def destroy
@@ -67,12 +64,30 @@ class LinksController < ApplicationController
     params.require(:link).permit(:label, :target_url)
   end
 
+  def url_valid?(url)
+    uri = URI.parse(url)
+    uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+  rescue StandardError
+    false
+  end
+
   def build_link(link_params)
     if logged_in?
       current_user.links.build(link_params)
     else
       Link.new(link_params)
     end
+  end
+
+  def save_link(link)
+    if ShortLinkCreator.new(link).call
+      ShortCodeCacheWriter.new(link.short_code, link).call
+      success(link)
+    else
+      failure(link.errors.full_messages.to_sentence)
+    end
+  rescue ActiveRecord::RecordNotUnique
+    failure
   end
 
   def delete_link(link, user)
@@ -103,14 +118,8 @@ class LinksController < ApplicationController
     redirect_to short_code_links_path(updated_link.short_code)
   end
 
-  def invalid(updated_link)
-    flash[:error] = updated_link.errors.full_messages.to_sentence
-    flash[:link_params] = link_params
-    redirect_to new_links_path
-  end
-
-  def failure
-    flash[:error] = t('link.create.flash.error')
+  def failure(error_msg = t('link.create.flash.error'))
+    flash[:error] = error_msg
     flash[:link_params] = link_params
     redirect_to new_links_path
   end
