@@ -7,7 +7,7 @@ RSpec.describe ShortLinkFormComponent, type: :component do
 
   it 'renders the create short link form' do
     render_inline(described_class.new(link:))
-    expect(page).to have_text 'Title'
+    expect(page).to have_text 'Label'
     expect(page).to have_text 'URL'
   end
 end

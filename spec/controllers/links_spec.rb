@@ -70,8 +70,8 @@ RSpec.describe LinksController, type: :controller do
   end
 
   describe 'POST #create' do
-    let(:valid_link_params) { { link: { title: 'Jibone Blog', target_url: 'https://jshamsul.com' } } }
-    let(:invalid_url_params) { { link: { title: 'Wrong', target_url: 'ht@@tp:/huhu' } } }
+    let(:valid_link_params) { { link: { label: 'Jibone Blog', target_url: 'https://jshamsul.com' } } }
+    let(:invalid_url_params) { { link: { label: 'Wrong', target_url: 'ht@@tp:/huhu' } } }
 
     context 'with valid attribute' do
       it 'creates a shorten url redirect to shorten link page' do
@@ -108,7 +108,7 @@ RSpec.describe LinksController, type: :controller do
   describe 'GET #redirect' do
     context 'when a valid short code is provided' do
       it 'redirects to the external URL' do
-        new_link = create(:link, title: 'jibone', target_url: 'https://jshamsul.com')
+        new_link = create(:link, label: 'jibone', target_url: 'https://jshamsul.com')
 
         get :redirect, params: { short_code: new_link.short_code }
 

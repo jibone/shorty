@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Link, type: :model do
   describe 'validations' do
-    it { should validate_presence_of(:title) }
+    it { should validate_presence_of(:label) }
     it { should validate_presence_of(:target_url) }
     it { should validate_presence_of(:short_code) }
     it { should validate_uniqueness_of(:short_code) }

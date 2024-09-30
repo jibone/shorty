@@ -6,10 +6,7 @@ class LinksController < ApplicationController
   def show
     @link = ShortCodeCacheRead.new(params[:short_code]).call
 
-    if @link.nil?
-      render :not_found
-      return
-    end
+    render :not_found and return if @link.nil?
 
     @current_user = current_user
     @short_url_full = @link.full_short_url(request)
@@ -67,7 +64,7 @@ class LinksController < ApplicationController
   private
 
   def link_params
-    params.require(:link).permit(:title, :target_url)
+    params.require(:link).permit(:label, :target_url)
   end
 
   def build_link(link_params)
