@@ -7,7 +7,7 @@ class LinkTitleFetcher
   end
 
   def call
-    response = HTTParty.get(@url)
+    response = HTTParty.get(@url, timeout: 5)
 
     return "" unless response.code == 200
 

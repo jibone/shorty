@@ -9,7 +9,7 @@ RSpec.describe LinkTitleFetcher do
       it 'returns the title from the HTML' do
         response = instance_double(HTTParty::Response, code: 200,
                                                        body: "<html><head><title>Example Title</title></head></html>")
-        allow(HTTParty).to receive(:get).with(url).and_return(response)
+        allow(HTTParty).to receive(:get).with(url, timeout: 5).and_return(response)
 
         result = service.call
 
@@ -20,7 +20,7 @@ RSpec.describe LinkTitleFetcher do
     context 'when the response code is not 200' do
       it 'returns an empty string' do
         response = instance_double(HTTParty::Response, code: 404, body: "")
-        allow(HTTParty).to receive(:get).with(url).and_return(response)
+        allow(HTTParty).to receive(:get).with(url, timeout: 5).and_return(response)
 
         result = service.call
 
@@ -31,7 +31,7 @@ RSpec.describe LinkTitleFetcher do
     context 'when the title tag is not found' do
       it 'returns and empty stirng' do
         response = instance_double(HTTParty::Response, code: 200, body: "<html><head></head></html>")
-        allow(HTTParty).to receive(:get).with(url).and_return(response)
+        allow(HTTParty).to receive(:get).with(url, timeout: 5).and_return(response)
 
         result = service.call
 
