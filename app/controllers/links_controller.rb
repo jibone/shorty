@@ -6,18 +6,19 @@ require 'uri'
 # The 'redirect' method will redirects to link's target_url.
 class LinksController < ApplicationController
   def show
-    @link = ShortCodeCacheRead.new(params[:short_code]).call
+    link = ShortCodeCacheRead.new(params[:short_code]).call
 
-    render :not_found and return if @link.nil?
+    render :not_found and return if link.nil?
+
+    @link = backfill_title(link)
 
     @current_user = current_user
-    @short_url_full = @link.full_short_url(request)
-    @qr_code = QrcodeGenerator.new(@short_url_full).call
+    @qr_code = QrcodeGenerator.new(@link.full_short_url(request)).call
 
-    @clicks = @link.link_clicks
-    @total_clicks = @clicks.count
+    clicks = @link.link_clicks
+    @total_clicks = clicks.count
 
-    @analytics = grouped_click_analytics(@clicks)
+    @analytics = grouped_click_analytics(clicks)
   end
 
   def new
@@ -38,10 +39,7 @@ class LinksController < ApplicationController
   def destroy
     @link = Link.find_by(short_code: params[:short_code])
 
-    if @link.nil?
-      render :not_found
-      return
-    end
+    render :not_found and return if @link.nil?
 
     @user = current_user
     delete_link(@link, @user)
@@ -99,6 +97,15 @@ class LinksController < ApplicationController
       flash[:alert] = t('link.delete.not_authorized')
     end
     redirect_to users_dashboard_path
+  end
+
+  def backfill_title(link)
+    return link if link.respond_to?(:title) && link.title.present?
+
+    updated_link = Link.find(link.id)
+    updated_link.title = LinkTitleFetcher.new(updated_link.target_url).call
+    updated_link.save
+    updated_link
   end
 
   # TODO: move this to new analytics service object.
