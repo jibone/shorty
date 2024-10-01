@@ -22,7 +22,7 @@ RSpec.describe LinksController, type: :controller do
         end
 
         it 'assigns all the analytics stats' do
-          expect(assigns(:total_clicks)).to eq(3)
+          expect(assigns(:analytics)[:total_clicks]).to eq(3)
           expect(assigns(:analytics)[:clicks_by_country]).to eq({ 'Singapore' => 2, 'Malaysia' => 1 })
           expect(assigns(:analytics)[:clicks_by_device]).to eq({ 'desktop' => 2, 'mobile' => 1 })
           expect(assigns(:analytics)[:clicks_by_browser]).to eq({ 'Chrome' => 2, 'Safari' => 1 })
@@ -45,7 +45,7 @@ RSpec.describe LinksController, type: :controller do
         end
 
         it 'assings 0 and empty for all the analytic stats' do
-          expect(assigns(:total_clicks)).to eq(0)
+          expect(assigns(:analytics)[:total_clicks]).to eq(0)
           expect(assigns(:analytics)[:clicks_by_country]).to be_empty
           expect(assigns(:analytics)[:clicks_by_device]).to be_empty
           expect(assigns(:analytics)[:clicks_by_browser]).to be_empty
