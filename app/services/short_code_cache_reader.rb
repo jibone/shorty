@@ -1,7 +1,7 @@
 # ShortCodeCacheRead
 #
 # Read from cahce or database
-class ShortCodeCacheRead
+class ShortCodeCacheReader
   def initialize(short_code)
     @short_code = short_code
     @namespace = 'shorty'
