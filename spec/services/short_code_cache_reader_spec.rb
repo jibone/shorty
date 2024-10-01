@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe ShortCodeCacheRead, type: :service do
+RSpec.describe ShortCodeCacheReader, type: :service do
   let(:short_code) { 'abcdef' }
   let(:namespace) { 'shorty' }
   let(:cache_key) { "#{namespace}:#{short_code}" }
-  let(:service) { ShortCodeCacheRead.new(short_code) }
+  let(:service) { ShortCodeCacheReader.new(short_code) }
   let(:link) { Link.new(short_code:, target_url: 'https://example.com') }
 
   describe '#call' do

@@ -1,7 +1,7 @@
-# ShortCodeCacheDelete
+# ShortCodeCacheRemover
 #
 # Delete the cache.
-class ShortCodeCacheDelete
+class ShortCodeCacheRemover
   def initialize(short_code)
     @short_code = short_code
     @namespace = 'shorty'

@@ -6,7 +6,7 @@ require 'uri'
 # The 'redirect' method will redirects to link's target_url.
 class LinksController < ApplicationController
   def show
-    link = ShortCodeCacheRead.new(params[:short_code]).call
+    link = ShortCodeCacheReader.new(params[:short_code]).call
 
     render :not_found and return if link.nil?
 
@@ -44,7 +44,7 @@ class LinksController < ApplicationController
   end
 
   def redirect
-    @link = ShortCodeCacheRead.new(params[:short_code]).call
+    @link = ShortCodeCacheReader.new(params[:short_code]).call
 
     if @link
       ClickEventWriter.new(@link, request).call
@@ -88,7 +88,7 @@ class LinksController < ApplicationController
 
   def delete_link(link, user)
     if link.user == user
-      ShortCodeCacheDelete.new(link.short_code).call
+      ShortCodeCacheRemover.new(link.short_code).call
       link.destroy
       flash[:notice] = t('link.delete.success')
     else
