@@ -66,7 +66,7 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
     <div class="border border-gray-300 p-4 rounded-lg">
       <h3 class="text-lg font-medium">Total Clicks:</h3>
-      <div class="text-2xl"><%= @total_clicks %></div>
+      <div class="text-2xl"><%= @clicks.size %></div>
     </div>
 
     <div class="border border-gray-300 p-4 rounded-lg">
@@ -116,6 +116,37 @@
         <% end %>
       </div>
     </div>
+  </div>
+
+  <div class="mt-4 mb-16">
+    <table class="min-w-full divide-y divide-gray-300">
+      <thead>
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Timestamp</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">IP address</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Country</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Region</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">City</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Device</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Browser</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">OS</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @clicks.each do |click| %>
+          <tr>
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= click.created_at %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= click.ip_address %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= click.country %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= click.region %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= click.city %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= click.device_type %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= click.browser_name %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= click.os_name %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
 

@@ -15,10 +15,8 @@ class LinksController < ApplicationController
     @current_user = current_user
     @qr_code = QrcodeGenerator.new(@link.full_short_url(request)).call
 
-    clicks = @link.link_clicks
-    @total_clicks = clicks.count
-
-    @analytics = grouped_click_analytics(clicks)
+    @clicks = @link.link_clicks
+    @analytics = LinkAnalyticCalculator.new(@clicks).call
   end
 
   def new
@@ -106,18 +104,6 @@ class LinksController < ApplicationController
     updated_link.title = LinkTitleFetcher.new(updated_link.target_url).call
     updated_link.save
     updated_link
-  end
-
-  # TODO: move this to new analytics service object.
-  # Logic should not be in controller or model
-  def grouped_click_analytics(clicks)
-    {
-      clicks_by_country: clicks.group(:country).count,
-      clicks_by_device: clicks.group(:device_type).count,
-      clicks_by_browser: clicks.group(:browser_name).count,
-      clicks_by_os: clicks.group(:os_name).count,
-      clicks_by_referer: clicks.group(:referer).count,
-    }
   end
 
   def success(updated_link)
