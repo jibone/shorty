@@ -27,7 +27,7 @@ class UsersController < ApplicationController
   def dashboard
     if logged_in?
       @user = current_user
-      @links = @user.links
+      @links = @user.links.includes(:link_clicks)
     else
       redirect_to root_path
     end

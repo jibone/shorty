@@ -35,7 +35,7 @@
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.title %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.full_short_url(request) %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.target_url %></td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.link_clicks.count %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= link.link_clicks.size %></td>
                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                   <%= link_to "Delete", destroy_links_path(link.short_code), data: { turbo: false }, class: "text-indigo-600" %>
                 </td>
