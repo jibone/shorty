@@ -7,7 +7,7 @@ class ClickEventWriter
 
   def call
     # Geolocation lookup from IP
-    location = Geocoder.search(@request.remote_ip).first
+    location = IpGeoLocator.new(@request.remote_ip).call
 
     # Get browser details from user-agent
     browser = Browser.new(@request.user_agent)
@@ -28,9 +28,9 @@ class ClickEventWriter
     LinkClick.create!(
       link:,
       ip_address: request.remote_ip,
-      country: location&.country,
-      region: location&.region,
-      city: location&.city,
+      country: location[:country],
+      region: location[:region],
+      city: location[:city],
       device_type: device(browser),
       browser_name: browser.name,
       browser_version: browser.full_version,
