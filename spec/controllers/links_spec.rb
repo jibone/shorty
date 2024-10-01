@@ -107,6 +107,20 @@ RSpec.describe LinksController, type: :controller do
 
   describe 'GET #redirect' do
     context 'when a valid short code is provided' do
+      let(:ip_geo_locator_stub) { instance_double(IpGeoLocator) }
+      let(:ip_geo_locator_result) do
+        {
+          country: 'Country',
+          region: 'Region',
+          city: 'City',
+        }
+      end
+
+      before do
+        allow(IpGeoLocator).to receive(:new).with(request.remote_ip).and_return(ip_geo_locator_stub)
+        allow(ip_geo_locator_stub).to receive(:call).and_return(ip_geo_locator_result)
+      end
+
       it 'redirects to the external URL' do
         new_link = create(:link, label: 'jibone', target_url: 'https://jshamsul.com')
 

@@ -10,12 +10,12 @@ RSpec.describe ClickEventWriter, type: :service do
         referer: 'http://referer.example.com'
       )
     end
-    let(:geocoder_result) do
-      double(
+    let(:ip_geo_locator_result) do
+      {
         country: 'Country',
         region: 'Region',
-        city: 'City'
-      )
+        city: 'City',
+      }
     end
     let(:device) do
       double(
@@ -32,9 +32,11 @@ RSpec.describe ClickEventWriter, type: :service do
       )
     end
     let(:click_event_writer) { ClickEventWriter.new(link, request) }
+    let(:ip_geo_locator_stub) { instance_double(IpGeoLocator) }
 
     before do
-      allow(Geocoder).to receive(:search).with(request.remote_ip).and_return([geocoder_result])
+      allow(IpGeoLocator).to receive(:new).with(request.remote_ip).and_return(ip_geo_locator_stub)
+      allow(ip_geo_locator_stub).to receive(:call).and_return(ip_geo_locator_result)
       allow(Browser).to receive(:new).with(request.user_agent).and_return(browser)
     end
 
@@ -46,9 +48,9 @@ RSpec.describe ClickEventWriter, type: :service do
       link_click = LinkClick.last
       expect(link_click.link).to eq(link)
       expect(link_click.ip_address).to eq(request.remote_ip)
-      expect(link_click.country).to eq(geocoder_result.country)
-      expect(link_click.region).to eq(geocoder_result.region)
-      expect(link_click.city).to eq(geocoder_result.city)
+      expect(link_click.country).to eq(ip_geo_locator_result[:country])
+      expect(link_click.region).to eq(ip_geo_locator_result[:region])
+      expect(link_click.city).to eq(ip_geo_locator_result[:city])
       expect(link_click.device_type).to eq('desktop') # Based on the provided user agent
       expect(link_click.browser_name).to eq(browser.name)
       expect(link_click.browser_version).to eq(browser.full_version)
